@@ -1,14 +1,27 @@
 import React from "react";
+// Импорт кнопки из библиотеки react-bootstrap с переименованием
+import { Button as BootstrapButton } from "react-bootstrap";
 
-const Button = ({ text, onClick }) => {
+
+// пропс - это механизм для передачи данных от родительского компонента к дочернему
+// Создание функционального компонента Button
+const Button = ({ 
+  children,          // содержимое кнопки
+  onClick,           // функция-обработчик клика
+  className = "",    // Пропс для CSS-классов (по умолчанию пусьая строка)
+  style              // Пропс для inline-стилей
+}) => {
   return (
-    <button
-      className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 transition"
-      onClick={onClick}
+    // Используем BootstrapButton с переданными пропсами
+    <BootstrapButton 
+      onClick={onClick}                 // Передаем обработчик клика
+      className={`px-3 ${className}`}   // Шаблонная строка для классов
+      style={style}                     // Передаем inline-стили
     >
-      {text}
-    </button>
+      {children}                   {/* Вставляем дочерние элементы */}
+    </BootstrapButton>
   );
 };
 
+// Экспорт компонента по умолчанию
 export default Button;
