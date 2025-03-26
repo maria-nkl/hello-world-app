@@ -24,26 +24,30 @@ const Content = ({ activeLab, labs }) => {
           {lab.buttons && (
             // Контейнер для кнопок с:
             // отступом сверху (mt-3)
+            // text-center для центрирования содержимого
             // гибким расположением (d-flex)
             // переносом на новую строку (flex-wrap)
+            // justify-content-center для центрирования кнопок по горизонтали
             // промежутком между кнопками (gap-2)
-            <div className="mt-3 d-flex flex-wrap gap-2">
-              {/* Для каждой кнопки в массиве lab.buttons */}
-              {lab.buttons.map((btn, index) => (
+            <div className="mt-3 text-center">
+              <div className="d-flex flex-wrap justify-content-center gap-2">
+                {/* Для каждой кнопки в массиве lab.buttons */}
+                {lab.buttons.map((btn, index) => (
                 // Создаем кнопку с:
                 // уникальным ключом (key)
                 // базовым классом btn
                 // белым текстом (text-white)
                 // цветом фона из btn.color
-                <button
-                  key={index} // Важно для React при работе со списками
-                  className="btn text-white"
-                  style={{ backgroundColor: btn.color }}
-                  onClick={() => alert(`Выбрано: ${btn.title}`)} // уведомление
-                >
-                  {btn.title} {/* Текст на кнопке */}
-                </button>
-              ))}
+                  <button
+                    key={index} // Важно для React при работе со списками
+                    className="btn text-white"
+                    style={{ backgroundColor: btn.color }}
+                    onClick={() => alert(`Выбрано: ${btn.title}`)} // уведомление
+                  >
+                    {btn.title} {/* Текст на кнопке */}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
         </Card.Text>
