@@ -1,4 +1,28 @@
 body {
-  margin: 0;
-  font-family: system-ui, -apple-system, sans-serif;
+  transition: all 0.3s ease;
+}
+
+.theme-icon {
+  font-size: 1.2rem;
+  margin-right: 0.5rem;
+}
+
+/* Кастомные стили */
+body.theme-transition * {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Анимация кнопок */
+.btn-scale {
+  transition: transform 0.2s;
+}
+.btn-scale:hover {
+  transform: scale(1.05);
+}
+
+/* Адаптивные отступы */
+@media (max-width: 768px) {
+  .mobile-mt {
+    margin-top: 1rem;
+  }
 }

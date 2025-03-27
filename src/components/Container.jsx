@@ -9,7 +9,7 @@ const Container = ({
   return (
     // Используем готовую "коробку" из Bootstrap. добавляем стандартные отступы (my-4) подставляем переданные стили (сlassname)
     <BootstrapContainer 
-    className={`my-4 ${className}`}
+    className={`my-3 ${className}`}
     >
       {children}       {/* показываем всё, что передали ранее */}
     </BootstrapContainer>

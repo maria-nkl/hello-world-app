@@ -1,50 +1,60 @@
-import React from "react"; // Основная библиотека React
-import { Card } from "react-bootstrap"; // Готовый компонент карточки из Bootstrap
+import React from 'react'; // Основная библиотека React
+import { Card } from 'react-bootstrap'; // Готовый компонент карточки из Bootstrap
+import { useParams } from 'react-router-dom'; // Хук для работы с параметрами URL
+import { useTheme } from '../context/ThemeContext'; // Наш хук для работы с темой
 
-// Компонент Content для отображения содержимого лабораторной работы (на вход id лабраторной работы и список всех лр)
-const Content = ({ activeLab, labs }) => {
-  // Находим нужную лабораторную работу:
-  // 1. Ищем работу с id равным activeLab
-  // 2. Если не нашли - берем первую работу из списка (labs[0])
-  const lab = labs.find(l => l.id === activeLab) || labs[0];
+// Компонент Content - отображает содержимое лабораторной работы
+const Content = ({ labs }) => {
+  // 1. Получаем параметр labId из URL (например, для /labs/123 вернет "123")
+  const { labId } = useParams();
   
+  // 2. Получаем текущую тему (isDark - true/false)
+  const { isDark } = useTheme();
+  
+  // 3. Находим нужную лабораторную работу:
+  // - Ищем по совпадению id
+  // - Если не нашли - берем первую работу из списка
+  const lab = labs.find(l => l.id === Number(labId)) || labs[0];
+
+  // Возвращаем JSX разметку
   return (
-    // Карточка с отступом сверху (mt-3)
-    <Card className="mt-3">
-      <Card.Body> {/* Тело карточки */}
-        {/* Заголовок карточки - название лабораторной работы */}
+    // Карточка Bootstrap с динамическими классами:
+    // - mt-3 - отступ сверху
+    // - bg-secondary text-white - если темная тема
+    <Card className={`mt-3 ${isDark ? 'bg-secondary text-white' : ''}`}>
+      <Card.Body>
+        {/* Заголовок карточки - название работы */}
         <Card.Title>{lab.title}</Card.Title>
         
         {/* Основное содержимое карточки */}
         <Card.Text>
-          {/* Выводим основной текст работы */}
+          {/* Текст лабораторной работы */}
           {lab.content}
           
           {/* Если есть кнопки - отображаем их */}
           {lab.buttons && (
-            // Контейнер для кнопок с:
-            // отступом сверху (mt-3)
-            // text-center для центрирования содержимого
-            // гибким расположением (d-flex)
-            // переносом на новую строку (flex-wrap)
-            // justify-content-center для центрирования кнопок по горизонтали
-            // промежутком между кнопками (gap-2)
             <div className="mt-3 text-center">
+              {/* Контейнер для кнопок с flex-разметкой: */}
+              {/* - d-flex - гибкий контейнер */}
+              {/* - flex-wrap - перенос на новую строку */}
+              {/* - justify-content-center - центрирование по горизонтали */}
+              {/* - gap-2 - промежутки между элементами */}
               <div className="d-flex flex-wrap justify-content-center gap-2">
                 {/* Для каждой кнопки в массиве lab.buttons */}
                 {lab.buttons.map((btn, index) => (
-                // Создаем кнопку с:
-                // уникальным ключом (key)
-                // базовым классом btn
-                // белым текстом (text-white)
-                // цветом фона из btn.color
+                  // Создаем кнопку с:
+                  // - key - уникальный ключ (обязательно для списков в React)
+                  // - text-white - белый текст
+                  // - style - цвет фона из данных кнопки
+                  // - onClick - обработчик клика
                   <button
-                    key={index} // Важно для React при работе со списками
+                    key={index}
                     className="btn text-white"
                     style={{ backgroundColor: btn.color }}
-                    onClick={() => alert(`Выбрано: ${btn.title}`)} // уведомление
+                    onClick={() => alert(`Выбрано: ${btn.title}`)}
                   >
-                    {btn.title} {/* Текст на кнопке */}
+                    {/* Текст кнопки */}
+                    {btn.title}
                   </button>
                 ))}
               </div>
@@ -56,5 +66,5 @@ const Content = ({ activeLab, labs }) => {
   );
 };
 
-// Делаем компонент доступным для использования в других файлах
+// Экспортируем компонент для использования в других файлах
 export default Content;

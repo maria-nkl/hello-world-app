@@ -1,19 +1,38 @@
-import React from 'react' // Основная библиотека React
-import ReactDOM from 'react-dom/client' // Библиотека для рендеринга React в DOM
-import 'bootstrap/dist/css/bootstrap.min.css' // Стили Bootstrap (минифицированная версия)
-import App from './App' // Наш главный компонент приложения
-import './index.css' // Дополнительные кастомные стили
+import React from 'react'; // Основная библиотека React
+import ReactDOM from 'react-dom/client'; // Для рендеринга React в DOM
 
-// Создаем корневой элемент для рендеринга React-приложения
-// document.getElementById('root') - находим элемент с id="root" в index.html
-const root = ReactDOM.createRoot(document.getElementById('root'))
+// Импортируем инструменты для маршрутизации, состояния и темы
+import { BrowserRouter } from 'react-router-dom'; // Для навигации между страницами
+import { Provider } from 'react-redux'; // Для подключения Redux хранилища
+import { ThemeProvider } from './context/ThemeContext'; // Для управления темой
 
-// Рендерим наше приложение в корневой элемент
-root.render(
-  // React.StrictMode - специальный компонент для выявления потенциальных проблем
-  // Включает дополнительные проверки и предупреждения в development-режиме
+// Импортируем настройки хранилища и главный компонент
+import store from './store/store'; // Наше Redux хранилище
+import App from './App'; // Главный компонент приложения
+
+// Импортируем стили
+import 'bootstrap/dist/css/bootstrap.min.css'; // Стили Bootstrap
+import './index.css'; // Наши кастомные стили
+
+// Создаем корневой элемент и рендерим приложение
+ReactDOM.createRoot(document.getElementById('root')).render(
+  // Режим StrictMode помогает выявлять проблемы в приложении
   <React.StrictMode>
-    {/* Главный компонент нашего приложения */}
-    <App />
+    
+    {/* BrowserRouter обеспечивает работу маршрутизации */}
+    <BrowserRouter>
+      
+      {/* Provider связывает Redux хранилище с приложением */}
+      <Provider store={store}>
+        
+        {/* ThemeProvider дает доступ к теме всем компонентам */}
+        <ThemeProvider>
+          
+          {/* Главный компонент нашего приложения */}
+          <App />
+          
+        </ThemeProvider>
+      </Provider>
+    </BrowserRouter>
   </React.StrictMode>
-)
+);
