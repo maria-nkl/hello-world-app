@@ -1,70 +1,168 @@
-import React from 'react'; // Основная библиотека React
-import { Card } from 'react-bootstrap'; // Готовый компонент карточки из Bootstrap
-import { useParams } from 'react-router-dom'; // Хук для работы с параметрами URL
-import { useTheme } from '../context/ThemeContext'; // Наш хук для работы с темой
+// // Импортируем необходимые зависимости
+// import React from 'react';
+// import { Card } from 'react-bootstrap'; // Компонент карточки из Bootstrap
+// import { useParams } from 'react-router-dom'; // Хук для получения параметров URL
+// import { useTheme } from '../context/ThemeContext'; // Хук для доступа к теме приложения
 
-// Компонент Content - отображает содержимое лабораторной работы
-const Content = ({ labs }) => {
-  // 1. Получаем параметр labId из URL (например, для /labs/123 вернет "123")
-  const { labId } = useParams();
+// // Компонент Content для отображения содержимого лабораторной работы
+// const Content = ({ labs }) => {
+//   // Получаем параметр labId из URL (например, для URL /labs/1 получим labId = "1")
+//   const { labId } = useParams();
   
-  // 2. Получаем текущую тему (isDark - true/false)
+//   // Получаем текущую тему (темная/светлая) из контекста
+//   const { isDark } = useTheme();
+  
+//   // Находим лабораторную работу по ID из URL или берем первую как fallback
+//   const lab = labs.find(l => l.id === Number(labId)) || labs[0];
+
+//   return (
+//     // Карточка с динамическими классами в зависимости от темы
+//     <Card className={`mt-3 ${isDark ? 'bg-secondary text-white' : ''}`}>
+//       <Card.Body>
+//         {/* Заголовок карточки - название лабораторной работы */}
+//         <Card.Title>{lab.title}</Card.Title>
+        
+//         {/* Основное содержимое работы */}
+//         <div className="card-text">
+//           {/* Основной текст/контент лабораторной работы */}
+//           {lab.content}
+          
+//           {/* Блок с кнопками (если они есть в данных) */}
+//           {lab.buttons && (
+//             <div className="mt-3 text-center">
+//               {/* Контейнер для кнопок с flex-разметкой */}
+//               <div className="d-flex flex-wrap justify-content-center gap-2">
+//                 {/* Маппинг массива кнопок */}
+//                 {lab.buttons.map((btn, index) => (
+//                   <button
+//                     key={index} // Уникальный ключ для React
+//                     className="btn text-white" // Базовые классы кнопки
+//                     style={{ backgroundColor: btn.color }} // Цвет из данных
+//                     onClick={() => alert(`Выбрано: ${btn.title}`)} // Обработчик клика
+//                   >
+//                     {btn.title} {/* Текст кнопки */}
+//                   </button>
+//                 ))}
+//               </div>
+//             </div>
+//           )}
+//         </div>
+//       </Card.Body>
+//     </Card>
+//   );
+// };
+
+// export default Content;
+
+// import React from 'react';
+// import { Card } from 'react-bootstrap';
+// import { useParams } from 'react-router-dom';
+// import { useTheme } from '../context/ThemeContext';
+
+// // Компонент для отображения содержимого лабораторной работы
+// const Content = ({ labs }) => {
+//   // Получаем параметр labId из URL (например: /labs/1 → labId = "1")
+//   const { labId } = useParams();
+  
+//   // Получаем текущую тему (темная/светлая) из контекста
+//   const { isDark } = useTheme();
+  
+//   // Получаем лабораторную работу по ID или первую как fallback
+//   // labs теперь ожидается как объект вида { '1': {id: 1, ...}, '2': {id: 2, ...} }
+//   const lab = labs[labId-1] || labs[Object.keys(labs)[0]];
+
+//   return (
+//     // Карточка с динамическими классами в зависимости от темы
+//     <Card className={`mt-3 ${isDark ? 'bg-secondary text-white' : ''}`}>
+//       <Card.Body>
+//         {/* Заголовок с названием лабораторной работы */}
+//         <Card.Title>{lab.title}</Card.Title>
+        
+//         {/* Основное содержимое работы */}
+//         <div className="card-text">
+//           {/* HTML-содержимое лабораторной работы */}
+//           {lab.content}
+          
+//           {/* Блок с кнопками (если они есть в данных) */}
+//           {lab.buttons && (
+//             <div className="mt-3 text-center">
+//               {/* Flex-контейнер для кнопок с переносом и отступами */}
+//               <div className="d-flex flex-wrap justify-content-center gap-2">
+//                 {lab.buttons.map((btn, index) => (
+//                   <button
+//                     key={index}
+//                     className="btn text-white"
+//                     style={{ backgroundColor: btn.color }}
+//                     onClick={() => alert(`Выбрано: ${btn.title}`)}
+//                   >
+//                     {btn.title}
+//                   </button>
+//                 ))}
+//               </div>
+//             </div>
+//           )}
+//         </div>
+//       </Card.Body>
+//     </Card>
+//   );
+// };
+
+// export default Content;
+import React from 'react';
+import { Card } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
+import { useTheme } from '../context/ThemeContext';
+
+const Content = ({ labs }) => {
+  const { labId } = useParams();
   const { isDark } = useTheme();
   
-  // 3. Находим нужную лабораторную работу:
-  // - Ищем по совпадению id
-  // - Если не нашли - берем первую работу из списка
-  const lab = labs.find(l => l.id === Number(labId)) || labs[0];
+  // Получаем лабораторную работу по ID (теперь без вычитания 1)
+  // Если работа не найдена - берем первую из доступных
+  const lab = labs[labId] || labs[Object.keys(labs)[0]];
 
-  // Возвращаем JSX разметку
+  // Защита от undefined (на случай пустого объекта labs)
+  if (!lab) {
+    return (
+      <Card className={`mt-3 ${isDark ? 'bg-secondary text-white' : ''}`}>
+        <Card.Body>
+          <Card.Title>Лабораторная работа не найдена</Card.Title>
+          <div className="card-text">
+            Пожалуйста, выберите другую лабораторную работу из меню.
+          </div>
+        </Card.Body>
+      </Card>
+    );
+  }
+
   return (
-    // Карточка Bootstrap с динамическими классами:
-    // - mt-3 - отступ сверху
-    // - bg-secondary text-white - если темная тема
     <Card className={`mt-3 ${isDark ? 'bg-secondary text-white' : ''}`}>
       <Card.Body>
-        {/* Заголовок карточки - название работы */}
         <Card.Title>{lab.title}</Card.Title>
         
-        {/* Основное содержимое карточки */}
-        <Card.Text>
-          {/* Текст лабораторной работы */}
+        <div className="card-text">
           {lab.content}
           
-          {/* Если есть кнопки - отображаем их */}
           {lab.buttons && (
             <div className="mt-3 text-center">
-              {/* Контейнер для кнопок с flex-разметкой: */}
-              {/* - d-flex - гибкий контейнер */}
-              {/* - flex-wrap - перенос на новую строку */}
-              {/* - justify-content-center - центрирование по горизонтали */}
-              {/* - gap-2 - промежутки между элементами */}
               <div className="d-flex flex-wrap justify-content-center gap-2">
-                {/* Для каждой кнопки в массиве lab.buttons */}
                 {lab.buttons.map((btn, index) => (
-                  // Создаем кнопку с:
-                  // - key - уникальный ключ (обязательно для списков в React)
-                  // - text-white - белый текст
-                  // - style - цвет фона из данных кнопки
-                  // - onClick - обработчик клика
                   <button
                     key={index}
                     className="btn text-white"
                     style={{ backgroundColor: btn.color }}
                     onClick={() => alert(`Выбрано: ${btn.title}`)}
                   >
-                    {/* Текст кнопки */}
                     {btn.title}
                   </button>
                 ))}
               </div>
             </div>
           )}
-        </Card.Text>
+        </div>
       </Card.Body>
     </Card>
   );
 };
 
-// Экспортируем компонент для использования в других файлах
 export default Content;
