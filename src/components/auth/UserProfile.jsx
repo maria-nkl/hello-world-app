@@ -2,6 +2,7 @@ import React from 'react';
 import { Dropdown } from 'react-bootstrap';
 import { useAuth } from '../../context/AuthContext';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 const UserProfile = () => {
   const { user, logout } = useAuth();
@@ -22,6 +23,9 @@ const UserProfile = () => {
           {user.name && `Имя: ${user.name}`}
         </Dropdown.ItemText>
         <Dropdown.Divider />
+          <Dropdown.Item as={Link} to="/profile">
+            Редактировать профиль
+          </Dropdown.Item>
         <Dropdown.Item onClick={logout}>Выйти</Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>

@@ -1,0 +1,84 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Admin",
+      "email": "admin@example.com",
+      "password": "admin123"
+    },
+    {
+      "id": "fdc7",
+      "name": "Мария",
+      "email": "n@gmail.com",
+      "password": "123456"
+    },
+    {
+      "id": "ada6",
+      "name": "test",
+      "email": "test@mail.ru",
+      "password": "111111"
+    },
+    {
+      "id": "3c1f",
+      "name": "Мария",
+      "email": "test1@mail.ru",
+      "password": "111111"
+    },
+    {
+      "id": "448d",
+      "name": "Маша",
+      "email": "t@mail.ru",
+      "password": "123456"
+    },
+    {
+      "id": "46c4",
+      "name": "Мария1",
+      "email": "t1@mail.ru",
+      "password": "123456"
+    }
+  ],
+  "feedback": [
+    {
+      "id": "f87c",
+      "author": "Мария",
+      "authorEmail": "n@gmail.com",
+      "text": "глиори бь\n",
+      "timestamp": "2025-04-15T16:24:39.539Z"
+    },
+    {
+      "id": "722f",
+      "author": "Мария",
+      "authorEmail": "n@gmail.com",
+      "text": "долио\n",
+      "timestamp": "2025-04-15T16:24:44.497Z"
+    },
+    {
+      "id": "1955",
+      "author": "Маша",
+      "authorEmail": "t@mail.ru",
+      "text": "fdva",
+      "timestamp": "2025-04-15T16:44:37.500Z"
+    },
+    {
+      "id": "4363",
+      "author": "Мария",
+      "authorEmail": "n@gmail.com",
+      "text": "dv df df",
+      "timestamp": "2025-04-15T16:45:15.735Z"
+    },
+    {
+      "id": "2300",
+      "author": "test",
+      "authorEmail": "test@mail.ru",
+      "text": "fd s fsg ",
+      "timestamp": "2025-04-15T16:45:37.987Z"
+    },
+    {
+      "id": "09b9",
+      "author": "Мария",
+      "authorEmail": "t1@mail.ru",
+      "text": "вама",
+      "timestamp": "2025-04-16T01:10:28.203Z"
+    }
+  ]
+}

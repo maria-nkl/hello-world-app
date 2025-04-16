@@ -1,144 +1,96 @@
-// Импортируем необходимые хуки и компоненты React
-import React, { createContext, useState, useEffect, useCallback, useMemo } from 'react';
-import PropTypes from 'prop-types'; // Для проверки типов пропсов
-import { useNavigate } from 'react-router-dom'; // Хук для навигации
+import { createContext, useContext, useState, useEffect } from 'react';
+import { loginUser, registerUser, updateUserProfile } from '../api/auth';
 
-// Создаем контекст аутентификации, который будет доступен через useAuth()
-export const AuthContext = createContext();
+const AuthContext = createContext();
 
-// Провайдер аутентификации - оборачивает приложение и предоставляет функционал аутентификации
 export const AuthProvider = ({ children }) => {
-  // Состояния:
-  const [user, setUser] = useState(null); // Данные авторизованного пользователя
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Флаг аутентификации
-  const [isLoading, setIsLoading] = useState(true); // Флаг загрузки
-  const [authError, setAuthError] = useState(null); // Ошибки аутентификации
-  const navigate = useNavigate(); // Хук для навигации
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Эффект для проверки аутентификации при монтировании компонента
   useEffect(() => {
-    const checkAuth = async () => {
+    const initAuth = async () => {
       try {
-        // Проверяем localStorage на наличие данных пользователя
-        const storedUser = localStorage.getItem('auth_user');
+        const storedUser = localStorage.getItem('user');
         if (storedUser) {
-          const parsedUser = JSON.parse(storedUser);
-          setUser(parsedUser);
-          setIsAuthenticated(true);
+          setUser(JSON.parse(storedUser));
         }
-      } catch (error) {
-        console.error('Ошибка проверки аутентификации:', error);
       } finally {
-        setIsLoading(false); // В любом случае снимаем флаг загрузки
+        setIsLoading(false);
       }
     };
+    initAuth();
+  }, []);
 
-    checkAuth();
-  }, []); // Пустой массив зависимостей - выполняется только при монтировании
-
-  // Функция входа (useCallback для мемоизации и избежания лишних ререндеров)
-  const login = useCallback(async (credentials) => {
-    setIsLoading(true);
-    setAuthError(null); // Сбрасываем предыдущие ошибки
-    
+  const login = async (credentials) => {
     try {
-      // Имитация API-запроса (в реальном приложении здесь будет fetch/axios)
-      const response = await new Promise((resolve) => 
-        setTimeout(() => resolve({ 
-          data: { 
-            user: { 
-              id: '123', 
-              email: credentials.email, 
-              name: credentials.name || 'Пользователь' 
-            } 
-          } 
-        }), 500) // Имитация задержки сети
-      );
-
-      // Сохраняем пользователя в localStorage и состоянии
-      localStorage.setItem('auth_user', JSON.stringify(response.data.user));
-      setUser(response.data.user);
-      setIsAuthenticated(true);
-      navigate('/'); // Перенаправляем на главную после успешного входа
+      const userData = await loginUser(credentials);
+      if (!userData) throw new Error("Неверные учетные данные");
+      
+      setUser(userData);
+      localStorage.setItem('user', JSON.stringify(userData));
+      return true;
     } catch (error) {
-      setAuthError(error.message || 'Ошибка входа');
-      throw error; // Пробрасываем ошибку для обработки в форме
-    } finally {
-      setIsLoading(false);
-    }
-  }, [navigate]); // Зависимость - navigate
-
-  // Функция регистрации (аналогично login)
-  const register = useCallback(async (userData) => {
-    setIsLoading(true);
-    setAuthError(null);
-    
-    try {
-      // Имитация API-запроса для регистрации
-      const response = await new Promise((resolve) => 
-        setTimeout(() => resolve({ 
-          data: { 
-            user: { 
-              id: '456', 
-              email: userData.email, 
-              name: userData.name 
-            } 
-          } 
-        }), 500)
-      );
-
-      // Автоматический вход после регистрации
-      localStorage.setItem('auth_user', JSON.stringify(response.data.user));
-      setUser(response.data.user);
-      setIsAuthenticated(true);
-      navigate('/');
-    } catch (error) {
-      setAuthError(error.message || 'Ошибка регистрации');
+      console.error("Login error:", error);
       throw error;
-    } finally {
-      setIsLoading(false);
     }
-  }, [navigate]);
+  };
 
-  // Функция выхода
-  const logout = useCallback(() => {
-    // Очищаем данные пользователя
-    localStorage.removeItem('auth_user');
+  const register = async (userData) => {
+    try {
+      const newUser = await registerUser(userData);
+      setUser(newUser);
+      localStorage.setItem('user', JSON.stringify(newUser));
+      return true;
+    } catch (error) {
+      console.error("Registration error:", error);
+      throw error;
+    }
+  };
+
+  const updateProfile = async (updatedData) => {
+    try {
+      if (!user) throw new Error('Пользователь не авторизован');
+      
+      // Сохраняем текущий пароль, если он не был изменен
+      const dataToUpdate = {
+        ...updatedData,
+        password: updatedData.password || user.password
+      };
+  
+      const updatedUser = await updateUserProfile(user.id, dataToUpdate);
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      return true;
+    } catch (error) {
+      console.error("Update error:", error);
+      throw error;
+    }
+  };
+
+  const logout = () => {
     setUser(null);
-    setIsAuthenticated(false);
-    navigate('/login'); // Перенаправляем на страницу входа
-  }, [navigate]);
+    localStorage.removeItem('user');
+  };
 
-  // Мемоизированное значение контекста (оптимизация производительности)
-  const contextValue = useMemo(() => ({
-    user,
-    isAuthenticated,
-    isLoading,
-    authError,
-    login,
-    register,
-    logout,
-    setAuthError
-  }), [user, isAuthenticated, isLoading, authError, login, register, logout]);
-
-  // Возвращаем провайдер контекста с дочерними элементами
   return (
-    <AuthContext.Provider value={contextValue}>
+    <AuthContext.Provider value={{
+      user,
+      isLoading,
+      isAuthenticated: !!user,
+      login,
+      register,
+      logout,
+      updateProfile
+    }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Проверка типов пропсов
-AuthProvider.propTypes = {
-  children: PropTypes.node.isRequired
-};
-
-// Кастомный хук для удобного доступа к контексту аутентификации
 export const useAuth = () => {
-  const context = React.useContext(AuthContext);
+  const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth должен использоваться внутри AuthProvider');
+    throw new Error('useAuth must be used within AuthProvider');
   }
   return context;
 };
