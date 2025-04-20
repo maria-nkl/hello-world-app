@@ -67,3 +67,24 @@ main {
 .theme-transition * {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
+/* Анимация для Offcanvas */
+.offcanvas {
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Стили для кнопки меню */
+.btn-outline-light {
+  border-color: rgba(255, 255, 255, 0.5);
+  transition: all 0.2s;
+}
+
+.btn-outline-light:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 992px) {
+  .offcanvas {
+    width: 250px !important;
+  }
+}

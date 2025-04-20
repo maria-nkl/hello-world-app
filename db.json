@@ -35,6 +35,18 @@
       "name": "Мария1",
       "email": "t1@mail.ru",
       "password": "123456"
+    },
+    {
+      "id": "082c",
+      "name": "Катя Какатя",
+      "email": "katya@gmail.com",
+      "password": "123456"
+    },
+    {
+      "id": "5208",
+      "name": "Мария",
+      "email": "katya1@gmail.com",
+      "password": "123456"
     }
   ],
   "feedback": [
