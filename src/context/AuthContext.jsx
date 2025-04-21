@@ -25,13 +25,13 @@ export const AuthProvider = ({ children }) => {
     try {
       const userData = await loginUser(credentials);
       if (!userData) throw new Error("Неверные учетные данные");
-      
       setUser(userData);
       localStorage.setItem('user', JSON.stringify(userData));
       return true;
     } catch (error) {
       console.error("Login error:", error);
-      throw error;
+      // Пробрасываем исходное сообщение об ошибке
+      throw error; // Это важно для правильной обработки в LoginForm
     }
   };
 

@@ -12,17 +12,25 @@ const LoginForm = () => {
 
   const onSubmit = async (data) => {
     try {
-      setLoginError(null);
+      setLoginError(null); // Сбрасываем предыдущие ошибки
       const success = await login(data);
-      
       if (success) {
         navigate('/', { replace: true });
       }
     } catch (error) {
-      setLoginError('Неверный email или пароль');
       console.error('Login error:', error);
+  
+      // Проверяем код ошибки
+      if (error.code === 'BLOCKED_ACCOUNT') {
+        setLoginError('Вас заблокировали');
+      } else if (error.message === 'Неверные учетные данные') {
+        setLoginError('Неверный email или пароль');
+      } else {
+        setLoginError('Ошибка авторизации');
+      }
     }
   };
+
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <Form.Group className="mb-3">
@@ -37,7 +45,6 @@ const LoginForm = () => {
           {errors.email?.message}
         </Form.Control.Feedback>
       </Form.Group>
-
       <Form.Group className="mb-3">
         <Form.Label>Пароль</Form.Label>
         <Form.Control
@@ -50,13 +57,11 @@ const LoginForm = () => {
           {errors.password?.message}
         </Form.Control.Feedback>
       </Form.Group>
-
       {loginError && (
         <Alert variant="danger" className="mt-3">
-          {loginError}
+          {loginError} {/* Выводим сообщение об ошибке */}
         </Alert>
       )}
-
       <Button 
         type="submit" 
         variant="primary" 
