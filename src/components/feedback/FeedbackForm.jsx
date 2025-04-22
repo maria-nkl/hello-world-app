@@ -1,18 +1,23 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Button, Form } from 'react-bootstrap';
-import { useCallback } from 'react';
+import { useAddFeedbackMutation } from '../../store/feedbackApi';
 
-const FeedbackForm = ({ onSubmit }) => {
+const FeedbackForm = () => {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
+  const [addFeedback, { isLoading }] = useAddFeedbackMutation();
 
-  const handleFeedbackSubmit = useCallback((data) => {
-    onSubmit(data);
-    reset();
-  }, [onSubmit, reset]);
+  const onSubmit = async (data) => {
+    try {
+      await addFeedback(data).unwrap();
+      reset();
+    } catch (error) {
+      console.error('Failed to add feedback:', error);
+    }
+  };
 
   return (
-    <Form onSubmit={handleSubmit(handleFeedbackSubmit)}>
+    <Form onSubmit={handleSubmit(onSubmit)}>
       <Form.Group className="mb-3">
         <Form.Label>Ваше имя</Form.Label>
         <Form.Control
@@ -29,8 +34,8 @@ const FeedbackForm = ({ onSubmit }) => {
           isInvalid={!!errors.feedback}
         />
       </Form.Group>
-      <Button variant="primary" type="submit">
-        Отправить
+      <Button variant="primary" type="submit" disabled={isLoading}>
+        {isLoading ? 'Отправка...' : 'Отправить'}
       </Button>
     </Form>
   );

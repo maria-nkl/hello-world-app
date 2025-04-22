@@ -1,7 +1,13 @@
 import React from 'react';
-import { ListGroup } from 'react-bootstrap';
+import { ListGroup, Spinner, Alert } from 'react-bootstrap';
+import { useGetFeedbackQuery } from '../../store/feedbackApi';
 
-const FeedbackList = ({ feedbacks }) => {
+const FeedbackList = () => {
+  const { data: feedbacks, isLoading, error } = useGetFeedbackQuery();
+
+  if (isLoading) return <Spinner animation="border" />;
+  if (error) return <Alert variant="danger">{error.message}</Alert>;
+
   return (
     <ListGroup className="mt-4">
       {feedbacks.map((feedback, index) => (

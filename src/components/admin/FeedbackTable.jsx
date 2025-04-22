@@ -6,13 +6,20 @@ import {
   flexRender,
 } from '@tanstack/react-table';
 import { Button, Spinner } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
-import { removeFeedback } from '../../store/slices/feedbackSlice';
+import { useDeleteFeedbackMutation } from '../../store/feedbackApi';
 
 const FeedbackTable = ({ feedback, loading, isDark }) => {
-  const dispatch = useDispatch();
+  const [deleteFeedback] = useDeleteFeedbackMutation();
   const [columnOrder, setColumnOrder] = useState([]);
   const [sorting, setSorting] = useState([]);
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteFeedback(id).unwrap();
+    } catch (error) {
+      console.error('Ошибка при удалении:', error);
+    }
+  };
 
   const columns = useMemo(
     () => [
@@ -20,37 +27,37 @@ const FeedbackTable = ({ feedback, loading, isDark }) => {
         id: 'author',
         header: 'Автор',
         accessorKey: 'author',
-        size: 150, // Фиксированная ширина для колонки "Автор"
+        size: 150,
       },
       {
         id: 'authorEmail',
         header: 'Email',
         accessorKey: 'authorEmail',
-        size: 200, // Фиксированная ширина для колонки "Email"
+        size: 200,
       },
       {
         id: 'text',
         header: 'Отзыв',
         accessorKey: 'text',
-        size: 400, // Фиксированная ширина для колонки "Отзыв"
+        size: 400,
         cell: ({ getValue }) => <div className="feedback-cell">{getValue()}</div>,
       },
       {
         id: 'timestamp',
         header: 'Дата',
         accessorKey: 'timestamp',
-        size: 120, // Фиксированная ширина для колонки "Дата"
+        size: 120,
         cell: ({ getValue }) => new Date(getValue()).toLocaleDateString(),
       },
       {
         id: 'actions',
         header: 'Действия',
-        size: 120, // Фиксированная ширина для колонки "Действия"
+        size: 120,
         cell: ({ row }) => (
           <Button
             variant="danger"
             size="sm"
-            onClick={() => dispatch(removeFeedback(row.original.id))}
+            onClick={() => handleDelete(row.original.id)}
             disabled={loading}
           >
             {loading ? <Spinner size="sm" animation="border" /> : 'Удалить'}
@@ -58,7 +65,7 @@ const FeedbackTable = ({ feedback, loading, isDark }) => {
         ),
       },
     ],
-    [dispatch, loading]
+    [loading]
   );
 
   const table = useReactTable({

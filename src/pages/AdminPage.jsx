@@ -7,7 +7,7 @@ import {
   flexRender,
 } from '@tanstack/react-table';
 import { useAuth } from '../context/AuthContext';
-import { getAllUsers, deleteUser, updateUser } from '../api/users';
+import { getAllUsers, deleteUser, updateUserProfile } from '../api/auth';
 
 const AdminPage = () => {
   const { user: currentUser } = useAuth();
@@ -46,7 +46,7 @@ const AdminPage = () => {
 
   const handleToggleBlock = async (userId, isCurrentlyActive) => {
     try {
-      await updateUser(userId, { isActive: !isCurrentlyActive });
+      await updateUserProfile(userId, { isActive: !isCurrentlyActive });
       await loadUsers();
     } catch (err) {
       setError(err.message);

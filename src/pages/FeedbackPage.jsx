@@ -1,30 +1,25 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchFeedback, createFeedback } from '../store/slices/feedbackSlice';
-import FeedbackTable from '../components/admin/FeedbackTable.jsx'; // Новый компонент для таблицы
+import { useGetFeedbackQuery, useAddFeedbackMutation } from '../store/feedbackApi';
+import FeedbackTable from '../components/admin/FeedbackTable.jsx';
 
 const FeedbackPage = () => {
   const { user } = useAuth();
   const { isDark } = useTheme();
-  const dispatch = useDispatch();
+  const [newFeedback, setNewFeedback] = useState('');
   
-  const {
-    items: feedbackList,
-    status,
-    error
-  } = useSelector((state) => state.feedback);
+  const { 
+    data: feedbackList = [], 
+    isLoading, 
+    isError, 
+    error,
+    refetch 
+  } = useGetFeedbackQuery();
+  
+  const [addFeedback, { isLoading: isAdding }] = useAddFeedbackMutation();
 
-  const [newFeedback, setNewFeedback] = React.useState('');
-
-  // Загрузка отзывов
-  useEffect(() => {
-    dispatch(fetchFeedback());
-  }, [dispatch]);
-
-  // Отправка отзыва
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!newFeedback.trim()) return;
@@ -37,29 +32,29 @@ const FeedbackPage = () => {
     };
 
     try {
-      await dispatch(createFeedback(feedbackData)).unwrap();
+      await addFeedback(feedbackData).unwrap();
       setNewFeedback('');
+      refetch(); // Обновляем список после добавления
     } catch (err) {
       console.error('Ошибка при отправке:', err);
     }
   };
 
-  // Для админов - версия с таблицей
   if (user?.role === 'admin') {
     return (
       <Card className={`mt-4 ${isDark ? 'bg-secondary text-white' : ''}`}>
         <Card.Body>
           <Card.Title>Управление отзывами (админ)</Card.Title>
           
-          {error && (
-            <Alert variant="danger" onClose={() => dispatch(fetchFeedback())} dismissible>
-              {error}
+          {isError && (
+            <Alert variant="danger" onClose={refetch} dismissible>
+              {error?.message || 'Ошибка загрузки отзывов'}
             </Alert>
           )}
 
           <FeedbackTable 
             feedback={feedbackList} 
-            loading={status === 'loading'}
+            loading={isLoading}
             isDark={isDark}
           />
         </Card.Body>
@@ -67,15 +62,14 @@ const FeedbackPage = () => {
     );
   }
 
-  // Для обычных пользователей - версия только для чтения
   return (
     <Card className={`mt-4 ${isDark ? 'bg-secondary text-white' : ''}`}>
       <Card.Body>
         <Card.Title>Обратная связь</Card.Title>
 
-        {error && (
-          <Alert variant="danger" onClose={() => dispatch(fetchFeedback())} dismissible>
-            {error}
+        {isError && (
+          <Alert variant="danger" onClose={refetch} dismissible>
+            {error?.message || 'Ошибка загрузки отзывов'}
           </Alert>
         )}
 
@@ -91,35 +85,37 @@ const FeedbackPage = () => {
                   onChange={(e) => setNewFeedback(e.target.value)}
                   placeholder="Поделитесь вашим мнением..."
                   className={isDark ? 'bg-dark text-white' : ''}
-                  disabled={status === 'loading'}
+                  disabled={isAdding}
                 />
               </Form.Group>
               <Button
                 variant={isDark ? 'light' : 'primary'}
                 type="submit"
-                disabled={status === 'loading' || !newFeedback.trim()}
+                disabled={isAdding || !newFeedback.trim()}
                 className="mt-2"
               >
-                {status === 'loading' ? <Spinner size="sm" /> : 'Отправить'}
+                {isAdding ? <Spinner size="sm" /> : 'Отправить'}
               </Button>
             </Form>
 
             <div className={`feedback-list ${isDark ? 'dark' : ''}`}>
               <h5>Последние отзывы</h5>
-              {status === 'loading' && feedbackList.length === 0 ? (
+              {isLoading ? (
                 <Spinner animation="border" />
-              ) : (
+              ) : feedbackList.length > 0 ? (
                 feedbackList.map((item) => (
-                  <div key={item.id} className="feedback-item">
-                    <div className="feedback-header">
-                      <strong>{item.author}</strong>
-                      <small>
-                        {new Date(item.timestamp).toLocaleDateString()}
+                  <div key={item.id} className="feedback-item mb-3 p-2 border rounded">
+                    <div className="d-flex justify-content-between">
+                      <strong>{item.author || 'Аноним'}</strong>
+                      <small className="text-muted">
+                        {item.timestamp ? new Date(item.timestamp).toLocaleDateString() : 'Дата не указана'}
                       </small>
                     </div>
-                    <div className="feedback-text">{item.text}</div>
+                    <div className="feedback-text mt-1">{item.text}</div>
                   </div>
                 ))
+              ) : (
+                <Alert variant="info">Нет отзывов для отображения</Alert>
               )}
             </div>
           </>

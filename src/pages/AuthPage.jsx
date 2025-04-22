@@ -9,14 +9,20 @@ const AuthPage = () => {
   const { isDark } = useTheme();
   const { isAuthenticated } = useAuth();
 
-  // Если пользователь авторизован - редирект на главную
   if (isAuthenticated) {
     return <Navigate to="/" replace />;
   }
 
   return (
-    <Container className={`d-flex justify-content-center align-items-center min-vh-100 ${isDark ? 'bg-dark' : 'bg-light'}`}>
-      <Card className={`w-100 ${isDark ? 'bg-secondary text-white' : ''}`} style={{ maxWidth: '500px' }}>
+    <Container 
+      className={`d-flex justify-content-center align-items-center min-vh-100 ${
+        isDark ? 'bg-dark' : 'bg-light'
+      }`}
+    >
+      <Card 
+        className={`w-100 ${isDark ? 'bg-secondary text-white' : ''}`} 
+        style={{ maxWidth: '500px' }}
+      >
         <Card.Body>
           <AuthForm />
         </Card.Body>
