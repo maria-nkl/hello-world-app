@@ -26,7 +26,7 @@ const LoginForm = () => {
       } else if (error.message === 'Неверные учетные данные') {
         setLoginError('Неверный email или пароль');
       } else {
-        setLoginError('Ошибка авторизации');
+        setLoginError('Вас заблокировали');
       }
     }
   };
