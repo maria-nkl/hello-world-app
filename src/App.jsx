@@ -62,7 +62,7 @@ const App = () => {
                 <Offcanvas.Title>Навигация</Offcanvas.Title>
               </Offcanvas.Header>
               <Offcanvas.Body>
-                <Menu labs={labsData} onItemClick={closeMenu} />
+                {/* <Menu labs={labsData} onItemClick={closeMenu} />
                 {user?.role === 'admin' && (
                   <div className="mt-4">
                     <h5 className="h6 mb-3">Администрирование</h5>
@@ -78,7 +78,8 @@ const App = () => {
                       </li>
                     </ul>
                   </div>
-                )}
+                )} */}
+                <Menu labs={labsData} onItemClick={closeMenu} />
               </Offcanvas.Body>
             </Offcanvas>
           )}

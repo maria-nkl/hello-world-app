@@ -152,20 +152,11 @@
       "timestamp": "2025-04-21T10:14:35.877Z"
     },
     {
-      "id": "900a",
-      "name": "Мария",
-      "feedback": "регчбапграпер",
+      "id": "fc1b",
       "author": "Мария",
       "authorEmail": "n1@gmail.com",
-      "timestamp": "2025-04-21T17:11:33.077Z"
-    },
-    {
-      "id": "e939",
-      "name": "Мария",
-      "feedback": "1234567890",
-      "author": "Мария",
-      "authorEmail": "n1@gmail.com",
-      "timestamp": "2025-04-21T17:11:45.496Z"
+      "text": "отзыв ляляля\n",
+      "timestamp": "2025-04-22T03:52:44.592Z"
     }
   ]
 }
