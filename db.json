@@ -8,7 +8,7 @@
       "role": "admin",
       "isActive": true,
       "createdAt": "2023-01-01T00:00:00.000Z",
-      "updatedAt": "2025-04-21T09:33:13.927Z"
+      "updatedAt": "2025-04-21T16:39:39.928Z"
     },
     {
       "id": "04dc",
@@ -18,7 +18,7 @@
       "role": "user",
       "isActive": true,
       "createdAt": "2025-04-21T09:33:58.200Z",
-      "updatedAt": "2025-04-21T09:33:58.200Z"
+      "updatedAt": "2025-04-21T16:39:12.038Z"
     },
     {
       "id": "2b7f",
@@ -26,19 +26,9 @@
       "email": "n@gmail.com",
       "password": "123456",
       "role": "user",
-      "isActive": false,
-      "createdAt": "2025-04-21T10:14:15.334Z",
-      "updatedAt": "2025-04-21T10:15:04.167Z"
-    },
-    {
-      "id": "2012",
-      "name": "test",
-      "email": "test@gmail.com",
-      "password": "123456",
-      "role": "user",
       "isActive": true,
-      "createdAt": "2025-04-21T10:14:26.241Z",
-      "updatedAt": "2025-04-21T10:14:26.241Z"
+      "createdAt": "2025-04-21T10:14:15.334Z",
+      "updatedAt": "2025-04-21T16:39:13.266Z"
     }
   ],
   "feedback": [
@@ -160,6 +150,22 @@
       "authorEmail": "test@gmail.com",
       "text": "dfbwreas",
       "timestamp": "2025-04-21T10:14:35.877Z"
+    },
+    {
+      "id": "900a",
+      "name": "Мария",
+      "feedback": "регчбапграпер",
+      "author": "Мария",
+      "authorEmail": "n1@gmail.com",
+      "timestamp": "2025-04-21T17:11:33.077Z"
+    },
+    {
+      "id": "e939",
+      "name": "Мария",
+      "feedback": "1234567890",
+      "author": "Мария",
+      "authorEmail": "n1@gmail.com",
+      "timestamp": "2025-04-21T17:11:45.496Z"
     }
   ]
 }
