@@ -62,23 +62,6 @@ const App = () => {
                 <Offcanvas.Title>Навигация</Offcanvas.Title>
               </Offcanvas.Header>
               <Offcanvas.Body>
-                {/* <Menu labs={labsData} onItemClick={closeMenu} />
-                {user?.role === 'admin' && (
-                  <div className="mt-4">
-                    <h5 className="h6 mb-3">Администрирование</h5>
-                    <ul className="nav flex-column">
-                      <li className="nav-item">
-                        <a 
-                          href="/admin" 
-                          className="nav-link text-danger"
-                          onClick={closeMenu}
-                        >
-                          Панель администратора
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                )} */}
                 <Menu labs={labsData} onItemClick={closeMenu} />
               </Offcanvas.Body>
             </Offcanvas>
