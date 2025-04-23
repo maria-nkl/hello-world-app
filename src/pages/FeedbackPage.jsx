@@ -10,13 +10,7 @@ const FeedbackPage = () => {
   const { isDark } = useTheme();
   const [newFeedback, setNewFeedback] = useState('');
   
-  const { 
-    data: feedbackList = [], 
-    isLoading, 
-    isError, 
-    error,
-    refetch 
-  } = useGetFeedbackQuery();
+  const {data: feedbackList = [], isLoading, isError, error, refetch} = useGetFeedbackQuery();
   
   const [addFeedback, { isLoading: isAdding }] = useAddFeedbackMutation();
 

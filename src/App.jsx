@@ -26,6 +26,8 @@ const App = () => {
   const { isDark } = useTheme();
   const { isAuthenticated, isLoading, user } = useAuth();
   const location = useLocation();
+
+  // состояние меню
   const [showMenu, setShowMenu] = useState(false);
 
   const toggleMenu = () => setShowMenu(!showMenu);
@@ -47,6 +49,7 @@ const App = () => {
 
       <Container className="flex-grow-1 my-4">
         <Row>
+          {/* Скрытое меню */}
           {isAuthenticated && (
             <Offcanvas show={showMenu} onHide={closeMenu} placement="start" className={isDark ? 'bg-dark text-white' : ''}>
               <Offcanvas.Header closeButton closeVariant={isDark ? 'white' : undefined}>
